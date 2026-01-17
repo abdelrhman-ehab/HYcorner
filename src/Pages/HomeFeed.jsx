@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { createPostApi, getPostsApi } from '../ApiRequests/ApiRequests';
-import PostCard from '../Components/postCard';
+import PostCard from '../Components/PostCard';
 import { FaImage } from "react-icons/fa";
 import { Button } from '@heroui/react';
 import { FaRegCircleXmark } from "react-icons/fa6";
 import toastr from 'toastr';
-import { Textarea } from "@heroui/input";
 
 toastr.options = {
   "closeButton": false,
