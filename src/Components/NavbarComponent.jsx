@@ -22,15 +22,15 @@ export default function NavbarComponent(props) {
     navigate('/login')
   }
   return <>
-    <nav className='bg-gray-300 text-black dark:bg-gray-900 dark:text-gray-100 py-5 md:px-15 px-3'>
+    <nav className='bg-gray-300 text-black dark:bg-gray-900 dark:text-gray-100 md:px-15 p-4 sticky'>
       <div className="container mx-auto">
         <div className='flex justify-between items-center'>
-          <Link className={'text-xl font-medium flex items-center gap-1.5'} to={'/'}><img src={logo} className='w-10 object-cover'/> HYcorner</Link>
+          <Link className={'text-xl font-medium flex items-center gap-1.5'} to={'/'}><img src={logo} className='w-10 object-cover' /> HYcorner</Link>
           <div className='flex justify-center items-center gap-4'>
             {theme === 'light' ? <CiDark className='text-blue-900 text-2xl cursor-pointer' onClick={() => { toggleTheme() }} /> : <CiLight className='text-yellow-300 text-2xl cursor-pointer hover:animate-spin' onClick={() => { toggleTheme() }} />
             }
-            <FaUser className='text-xl cursor-pointer' onClick={() => { navigate('/profile') }} />
-            {isLoginned ? <RiLogoutCircleRLine className='text-red-700 text-xl cursor-pointer' onClick={logoutOperations} /> : <Link className='rounded-md bg-blue-700 text-white px-3 py-1.5 hover:bg-blue-900 cursor-pointer' to={'/register'}>Register</Link>}
+            {isLoginned ? <FaUser className='text-xl cursor-pointer' onClick={() => { navigate('/profile') }} /> : null}
+            {isLoginned ? <RiLogoutCircleRLine className='text-red-700 text-xl cursor-pointer' onClick={logoutOperations} /> : <Link className='rounded-md text-blue-700 bg-white px-3 py-1.5 hover:bg-gray-100 cursor-pointer' to={'/register'}>Register</Link>}
           </div>
         </div>
       </div>

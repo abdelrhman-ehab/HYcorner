@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as zod from 'zod';
 import { sendRegisterDataApi } from '../ApiRequests/ApiRequests';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const schema = zod.object({
   // name validation
@@ -60,8 +60,8 @@ export default function Register() {
   }
   return <>
     <h2 className='text-3xl font-medium text-center mb-8'>Register Now...</h2>
-    <div className='flex justify-center items-center'>
-      <Form onSubmit={handleSubmit(submit)} className='w-xs sm:w-sm md:w-md lg:w-lg'>
+    <div className='min-h-143 flex flex-col'>
+      <Form onSubmit={handleSubmit(submit)} className='w-xs sm:w-sm md:w-md lg:w-lg mx-auto'>
         <Input
           isInvalid={Boolean(errors.name)}
           label="Name"
@@ -125,13 +125,14 @@ export default function Register() {
           <SelectItem key={'female'}>Female</SelectItem>
         </Select>
 
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
           <Button isLoading={loading} color="primary" type='submit'>
             {loading ? '' : 'Create Account'}
           </Button>
           <Button type="reset" variant="flat">
             Reset
           </Button>
+          <p>Already Has an Account..! <Link className='text-blue-700' to={'/login'}>Login Now</Link> </p>
         </div>
         {APIError && <p className='text-red-700'>{APIError}</p>}
       </Form>

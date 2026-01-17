@@ -5,7 +5,7 @@ import App from './App.jsx'
 import "toastr/build/toastr.min.css";
 import { HeroUIProvider } from '@heroui/react'
 import AuthContextProvider from './Context/AuthContextProvider.jsx'
-import UserInfoContextProvider from './Context/userInfoContextProvider.jsx'
+import UserInfoContextProvider from './Context/UserInfoContextProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

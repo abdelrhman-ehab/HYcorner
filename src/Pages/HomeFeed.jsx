@@ -89,7 +89,10 @@ export default function HomeFeed() {
 
   useEffect(() => {
     getAllPosts()
+    const interval = setInterval(getAllPosts, 120000)
+    return () => clearInterval(interval)
   }, [])
+
 
 
 
@@ -98,7 +101,7 @@ export default function HomeFeed() {
 
     <section className='px-2 md:px-15'>
       <form onSubmit={createPost} className=''>
-        <div className='w-full min-w-[280px] max-w-[750px] mx-auto bg-gray-500/10 p-2 rounded-md'>
+        <div className='w-full min-w-[280px] max-w-[750px] mx-auto bg-gray-500/10 p-2 rounded-lg'>
           <div className='relative'>
             <textarea value={postBody} onChange={(e) => { setPostBody(e.target.value); }} className="w-full rounded-lg mb-3 border p-2" rows={3} placeholder="what's in your mind"></textarea>
             {postImageUrl &&

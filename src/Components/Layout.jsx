@@ -14,7 +14,7 @@ export default function Layout() {
   return <main className={theme === 'dark' ? 'dark' : 'light'}>
     <div className="text-black bg-gray-100 dark:bg-gray-950 dark:text-gray-100">
       <NavbarComponent toggleTheme={toggleTheme} theme={theme} />
-      <div className="container mx-auto py-7">
+      <div className="container mx-auto py-5 min-h-dvh">
         <Outlet></Outlet>
       </div>
     </div>
