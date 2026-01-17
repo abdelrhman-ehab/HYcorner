@@ -20,8 +20,8 @@ export default function Login() {
   const { handleSubmit, register, formState: { errors } } = useForm({
     defaultValues:
     {
-      email: "abdo2@gmail.com",
-      password: "Abdo123@"
+      email: "",
+      password: ""
     },
     resolver: zodResolver(schema),
     mode: 'onBlur',
@@ -66,15 +66,15 @@ export default function Login() {
           placeholder="Enter your password"
         />
 
-        <div className="flex items-center gap-2">
-          <Button isLoading={loading} color="primary" type="submit">
+        <div className="flex items-center gap-2 mb-1">
+          <Button className='px-5' isLoading={loading} color="primary" type="submit">
             {loading ? '' : 'Login'}
           </Button>
-          <Button type="reset" variant="flat">
+          <Button className='px-5' type="reset" variant="flat">
             Reset
           </Button>
-          <p>Haven't an Account yet..! <Link className='text-blue-700' to={'/register'}>Register Now</Link> </p>
         </div>
+        <p>Haven't an Account yet..! <Link className='text-blue-700' to={'/register'}>Register Now</Link> </p>
         {APIError && <p className='text-red-700'>{APIError}</p>}
       </Form>
     </div>

@@ -125,15 +125,15 @@ export default function Register() {
           <SelectItem key={'female'}>Female</SelectItem>
         </Select>
 
-        <div className="flex items-center gap-2">
-          <Button isLoading={loading} color="primary" type='submit'>
+        <div className="flex items-center gap-2 mb-1">
+          <Button className='px-5' isLoading={loading} color="primary" type='submit'>
             {loading ? '' : 'Create Account'}
           </Button>
-          <Button type="reset" variant="flat">
+          <Button className='px-5' type="reset" variant="flat">
             Reset
           </Button>
-          <p>Already Has an Account..! <Link className='text-blue-700' to={'/login'}>Login Now</Link> </p>
         </div>
+        <p>Already Has an Account..! <Link className='text-blue-700' to={'/login'}>Login Now</Link> </p>
         {APIError && <p className='text-red-700'>{APIError}</p>}
       </Form>
     </div>
