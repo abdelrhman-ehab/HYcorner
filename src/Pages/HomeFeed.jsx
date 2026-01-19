@@ -115,7 +115,7 @@ export default function HomeFeed() {
               <FaImage className='text-xl cursor-pointer' />
               <input onChange={generateImageUrl} type="file" className='hidden' />
             </label>
-            <Button isLoading={isLoading} disabled={isLoading || postBody?.length < 2} type='submit' className='bg-gray-50 text-black font-medium'>post</Button>
+            <Button isLoading={isLoading} disabled={isLoading || postBody?.length < 2} type='submit' className='bg-gray-50 text-black font-medium'>{isLoading? null : 'Post'}</Button>
           </div>
         </div>
       </form>

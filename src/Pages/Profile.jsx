@@ -58,8 +58,7 @@ export default function Profile() {
                   <p className="text-md block text-white">email: <span className='text-blue-700'>{userData?.email}</span></p>
                 </div>
               </div>
-              <Button className='bg-blue-800' variant='solid'><FaUserEdit className='text-xl' /></Button>
-
+              <Button className='bg-blue-800' size='sm' variant='solid'><FaUserEdit className='text-xl' /></Button>
             </div>
             <div className='space-y-1.5 text-sm block text-white'>
               <p>Profile createdAt: <span className='text-white/50 space-x-2'><span>{date}</span><span>{time}</span></span></p>
@@ -96,7 +95,7 @@ export default function Profile() {
       {/* user posts */}
       {userPosts ?
         <div className={`w-full min-w-[280px] max-w-[750px] mx-auto rounded-lg bg-gray-500/10 mt-7 flex flex-col gap-5 ${userPosts.length > 0 ? 'p-2' : 'p-0'} `}>
-          {userPosts.map(post =>
+          {[...userPosts].reverse().map(post =>
             <div key={post._id} className='shadow-md rounded-md overflow-hidden'>
 
               {/* post header */}
