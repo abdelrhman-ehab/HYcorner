@@ -42,7 +42,6 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
     const t = formate.toLocaleTimeString();
 
     const { userInfo } = useContext(UserInfoContext);
-    const [updateLoading, setUpdateLoading] = useState(false)
     const [updatedPostBody, setUpdatedPostBody] = useState('')
     const [updatedPostImage, setUpdatedPostImage] = useState(null)
     const [updatedPostImageUrl, setUpdatedPostImageUrl] = useState(null)
@@ -60,6 +59,8 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
             else {
                 toastr.error('faild to delete post ' + response.response.data.error);
             }
+        }catch(e){
+            console.log(e);
         } finally {
             setIsUpdating(false)
         }
@@ -67,7 +68,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
 
 
     const updatePost = async (e) => {
-        setUpdateLoading(true)
+        setIsUpdating(true)
         e.preventDefault()
         const formData = new FormData();
         if (updatedPostBody.length > 1) {
@@ -90,7 +91,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                 toastr.error('faild to update post ' + response.response.data.error);
             }
         }
-        setUpdateLoading(false)
+        setIsUpdating(false)
     }
 
     const generateImageUrl = (e) => {
@@ -110,12 +111,12 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                     alt=""
                 />
                 <div className={`flex flex-col ${commentHeader ? 'bg-gray-500/10 px-4 py-2 rounded-xl' : ''}`}>
-                    
-                    {commentHeader ? 
-                    <div className='flex items-center justify-between'>
-                        <span className='font-medium text-lg'>{commentHeader?.commentCreator?.name}</span>
-                        
-                    </div>  :
+
+                    {commentHeader ?
+                        <div className='flex items-center justify-between'>
+                            <span className='font-medium text-lg'>{commentHeader?.commentCreator?.name}</span>
+
+                        </div> :
                         <span className='font-medium text-lg'>{post?.user?.name}</span>
                     }
 
@@ -138,8 +139,8 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                 {(!commentHeader && (post?.user?._id === userInfo?._id)) && (
                     <Dropdown>
                         <DropdownTrigger>
-                            <Button variant="flat" disabled={isUpdating}>
-                                <BsThreeDotsVertical />
+                            <Button variant="flat" disabled={isUpdating} isLoading={isUpdating}>
+                                {isUpdating ? null : <BsThreeDotsVertical />}
                             </Button>
                         </DropdownTrigger>
 
@@ -182,7 +183,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                                     <Button color="danger" variant="flat" onPress={onClose}>
                                         Close
                                     </Button>
-                                    <Button type='submit' isLoading={updateLoading} disabled={updateLoading || updatedPostBody.length < 2} onPress={onClose}>
+                                    <Button type='submit' isLoading={isUpdating} disabled={isUpdating || updatedPostBody.length < 2} onPress={onClose}>
                                         update
                                     </Button>
                                 </ModalFooter>

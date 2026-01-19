@@ -10,6 +10,7 @@ import alternativePostCover from '../assets/postImageNotFound.png'
 import alternativeUserImage from '../assets/userCoverNotFound.png'
 import { Card, Skeleton } from "@heroui/react";
 import { Link } from 'react-router-dom';
+import { FaUserEdit } from "react-icons/fa";
 
 export default function Profile() {
   const [toggleLike, setToggleLike] = useState("")
@@ -57,7 +58,7 @@ export default function Profile() {
                   <p className="text-md block text-white">email: <span className='text-blue-700'>{userData?.email}</span></p>
                 </div>
               </div>
-              <Button className='bg-blue-800' variant='flat'>Update Profile</Button>
+              <Button className='bg-blue-800' variant='solid'><FaUserEdit className='text-xl' /></Button>
 
             </div>
             <div className='space-y-1.5 text-sm block text-white'>
