@@ -52,18 +52,18 @@ export default function Profile() {
               <div className='flex items-center gap-2 mb-3'>
                 <div className="w-14 aspect-square rounded-full overflow-hidden border">
                   <img src={userData?.photo} className='w-full' alt="" />
-                </div>
-                <div>
-                  <p className="text-md block text-white">name: <span className='text-white/50'>{userData?.name}</span></p>
-                  <p className="text-md block text-white">email: <span className='text-blue-700'>{userData?.email}</span></p>
+               </div>
+                <div className="text-md block dark:text-white font-medium">
+                  <p>name: <span className='dark:text-white/50 font-normal'>{userData?.name}</span></p>
+                  <p>email: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
                 </div>
               </div>
               <Button className='bg-blue-800' size='sm' variant='solid'><FaUserEdit className='text-xl' /></Button>
             </div>
-            <div className='space-y-1.5 text-sm block text-white'>
-              <p>Profile createdAt: <span className='text-white/50 space-x-2'><span>{date}</span><span>{time}</span></span></p>
-              <p>Date Of Birth: <span className='text-white/50'>{userData?.dateOfBirth}</span></p>
-              <p>Posts: <span className='text-white/50'>{numberOfPosts}</span></p>
+            <div className='space-y-1.5 text-sm block dark:text-white font-medium'>
+              <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'><span>{date}</span><span>{time}</span></span></p>
+              <p>Date Of Birth: <span className='dark:text-white/50 space-x-2 font-normal'>{userData?.dateOfBirth}</span></p>
+              <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{numberOfPosts}</span></p>
             </div>
           </div>
           :
