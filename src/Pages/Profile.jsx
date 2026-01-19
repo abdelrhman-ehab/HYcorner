@@ -58,7 +58,7 @@ export default function Profile() {
                   <p>email: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
                 </div>
               </div>
-              <Button className='bg-blue-800' size='sm' variant='solid'><FaUserEdit className='text-xl' /></Button>
+              <Button className='bg-blue-800' size='sm' variant='solid'><FaUserEdit className='text-xl text-white' /></Button>
             </div>
             <div className='space-y-1.5 text-sm block dark:text-white font-medium'>
               <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'><span>{date}</span><span>{time}</span></span></p>

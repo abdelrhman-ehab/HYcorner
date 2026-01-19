@@ -59,7 +59,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
             else {
                 toastr.error('faild to delete post ' + response.response.data.error);
             }
-        }catch(e){
+        } catch (e) {
             console.log(e);
         } finally {
             setIsUpdating(false)
@@ -113,11 +113,8 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                 <div className={`flex flex-col ${commentHeader ? 'bg-gray-500/10 px-4 py-2 rounded-xl' : ''}`}>
 
                     {commentHeader ?
-                        <div className='flex items-center justify-between'>
-                            <span className='font-medium text-lg'>{commentHeader?.commentCreator?.name}</span>
-
-                        </div> :
-                        <span className='font-medium text-lg'>{post?.user?.name}</span>
+                        <span className='font-medium text-md'>{commentHeader?.commentCreator?.name}</span> :
+                        <span className='font-medium text-md'>{post?.user?.name}</span>
                     }
 
                     {commentDate ?
@@ -131,7 +128,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                             <span>{tt}</span>
                         </div>
                     }
-                    <p className='px-2'>{comment?.content}</p>
+                    <p className='text-lg mt-1'>{comment?.content}</p>
                 </div>
             </div>
 
