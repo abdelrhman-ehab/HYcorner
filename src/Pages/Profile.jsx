@@ -38,31 +38,30 @@ export default function Profile() {
   }, [userData])
 
 
-  const formatedDate = new Date(userData?.createdAt)
-  const date = formatedDate.toLocaleDateString()
-  const time = formatedDate.toLocaleTimeString()
+  const formatedDate = new Date(userData?.dateOfBirth)
+  const dateOfBirth = formatedDate.toLocaleDateString()
+
+  const formatedDate2 = new Date(userData?.createdAt)
+  const createdAt = formatedDate2.toLocaleDateString()
+
+
+
   return <>
     <section className='px-2 md:px-15 mx-auto bg-transparent min-h-vh'>
       {/* user data */}
       <div className='w-full min-w-[280px] max-w-[750px] mx-auto p-4 rounded-lg bg-gray-500/10'>
         {userData ?
           <div className="profileHeader">
-            <div className='flex justify-between items-center'>
-              <div className='flex items-center gap-2 mb-3'>
-                <div className="w-14 aspect-square rounded-full overflow-hidden border">
-                  <img src={userData?.photo} className='w-full' alt="" />
-               </div>
-                <div className="text-md block dark:text-white font-medium">
-                  <p>name: <span className='dark:text-white/50 font-normal'>{userData?.name}</span></p>
-                  <p>email: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
-                </div>
-              </div>
-              <Button className='bg-blue-800' size='sm' variant='solid'><FaUserEdit className='text-xl text-white' /></Button>
+            <div className='w-17 object-cover aspect-square border mx-auto rounded-full overflow-hidden mb-1'>
+              <img src={userData?.photo} className='w-full' alt="" />
             </div>
-            <div className='space-y-1.5 text-sm block dark:text-white font-medium'>
-              <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'><span>{date}</span><span>{time}</span></span></p>
-              <p>Date Of Birth: <span className='dark:text-white/50 space-x-2 font-normal'>{userData?.dateOfBirth}</span></p>
+            <p className='text-lg block dark:text-white font-medium w-fit mx-auto mb-3'>HI, {userData?.name}</p>
+            <div className="text-md block dark:text-white font-medium space-y-1">
+              <p>E-Mail: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
+              <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'>{createdAt}</span></p>
+              <p>Date Of Birth: <span className='dark:text-white/50 space-x-2 font-normal'>{dateOfBirth}</span></p>
               <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{numberOfPosts}</span></p>
+              <Button className='bg-blue-800 w-full text-md font-medium mt-1' size='md' variant='solid'>Edit Profile <FaUserEdit className='text-white' /></Button>
             </div>
           </div>
           :

@@ -30,7 +30,7 @@ export default function NavbarComponent(props) {
             {theme === 'light' ? <CiDark className='text-blue-900 text-2xl cursor-pointer' onClick={() => { toggleTheme() }} /> : <CiLight className='text-yellow-300 text-2xl cursor-pointer hover:animate-spin' onClick={() => { toggleTheme() }} />
             }
             {isLoginned ? <FaUser className='text-xl cursor-pointer' onClick={() => { navigate('/profile') }} /> : null}
-            {isLoginned ? <RiLogoutCircleRLine className='text-red-700 text-xl cursor-pointer' onClick={logoutOperations} /> : <Link className='rounded-md text-blue-700 bg-white px-3 py-1.5 hover:bg-gray-100 cursor-pointer' to={'/register'}>Register</Link>}
+            {isLoginned ? <RiLogoutCircleRLine className='text-red-700 text-xl cursor-pointer' onClick={logoutOperations} /> : null}
           </div>
         </div>
       </div>
