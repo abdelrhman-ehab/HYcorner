@@ -18,12 +18,11 @@ export default function Profile() {
   const [userData, setUserData] = useState(null)
   const [userPosts, setUserPosts] = useState(null)
   const getUserData = async () => {
-    const { data } = await axios.get(`https://linked-posts.routemisr.com/users/profile-data`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-    console.log(data);
+    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
     setUserData(data.user)
   }
   const getUserPosts = async () => {
-    const { data } = await axios.get(`https://linked-posts.routemisr.com/users/${userData?._id}/posts`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
+    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userData?._id}/posts`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
     setUserPosts(data.posts)
     setNumberOfPosts(data.posts.length)
   }

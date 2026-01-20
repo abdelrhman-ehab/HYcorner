@@ -4,24 +4,7 @@ import PostCard from '../Components/PostCard';
 import { FaImage } from "react-icons/fa";
 import { Button } from '@heroui/react';
 import { FaRegCircleXmark } from "react-icons/fa6";
-import toastr from 'toastr';
-
-toastr.options = {
-  "closeButton": false,
-  "debug": true,
-  "newestOnTop": true,
-  "progressBar": true,
-  "positionClass": "toast-bottom-right",
-  "preventDuplicates": true,
-  "showDuration": "300",
-  "hideDuration": "1000",
-  "timeOut": "5000",
-  "extendedTimeOut": "1000",
-  "showEasing": "swing",
-  "hideEasing": "linear",
-  "showMethod": "fadeIn",
-  "hideMethod": "fadeOut"
-}
+import toast from 'react-hot-toast';
 
 
 
@@ -63,10 +46,10 @@ export default function HomeFeed() {
         setPostImageUrl(null)
         setIsLoading(false)
 
-        toastr["success"]("post added success")
+        toast.success("post added success")
       }
       else {
-        toastr["error"](response)
+        toast.error(response)
       }
     }
 
@@ -82,7 +65,7 @@ export default function HomeFeed() {
 
   // get all posts function
   const getAllPosts = async () => {
-    const response = await getPostsApi('https://linked-posts.routemisr.com/posts?limit=50&sort=-createdAt')
+    const response = await getPostsApi(`${import.meta.env.VITE_API_BASE_URL}/posts?limit=50&sort=-createdAt`)
     setPosts(response.posts)
   }
 
@@ -91,8 +74,6 @@ export default function HomeFeed() {
     const interval = setInterval(getAllPosts, 120000)
     return () => clearInterval(interval)
   }, [])
-
-
 
 
 

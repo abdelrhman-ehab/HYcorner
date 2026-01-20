@@ -5,28 +5,10 @@ import { createCommentApi } from '../ApiRequests/ApiRequests';
 import { Button } from '@heroui/react';
 import { UserInfoContext } from '../Context/UserInfoContext';
 import { BsThreeDotsVertical } from "react-icons/bs";
-import toastr from 'toastr';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import axios from 'axios';
 import { AuthContext } from '../Context/AuthContext';
-
-
-toastr.options = {
-    "closeButton": false,
-    "debug": true,
-    "newestOnTop": true,
-    "progressBar": true,
-    "positionClass": "toast-bottom-right",
-    "preventDuplicates": true,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-}
+import toast from 'react-hot-toast';
 
 
 export default function PostCardComments({ post, alternativeUserImage, commentsLimit, getAllPosts }) {
@@ -53,11 +35,11 @@ export default function PostCardComments({ post, alternativeUserImage, commentsL
             if (response.message) {
                 await getAllPosts()
                 setComment('')
-                toastr["success"]("comment added success")
+                toast.success("comment added success")
             }
         } catch (e) {
 
-            toastr["error"](e.response.data.message)
+            toast.error(e.response.data.message)
         }
         finally{
             setIsSending(false)
@@ -68,13 +50,13 @@ export default function PostCardComments({ post, alternativeUserImage, commentsL
     const deleteComment = async (id) => {
         setCommentModefication(true)
         try {
-            const { data } = await axios.delete(`https://linked-posts.routemisr.com/comments/${id}`, { headers: { 'token': token } })
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/comments/${id}`, { headers: { 'token': token } })
             if (data.message) {
                 await getAllPosts()
-                toastr["success"]('comment deleted successfully')
+                toast.success('comment deleted successfully')
             }
         } catch (e) {
-            toastr["error"](e.response.data.message)
+            toast.error(e.response.data.message)
         } finally {
             setCommentModefication(false)
         }
@@ -85,19 +67,19 @@ export default function PostCardComments({ post, alternativeUserImage, commentsL
         setIsSending(true)
         setCommentModefication(true)
         try {
-            const { data } = await axios.put(`https://linked-posts.routemisr.com/comments/${id}`, {"content": comment}, {
+            const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/comments/${id}`, {"content": comment}, {
                 headers: {
                     'token': token
                 }
             })
             console.log(data);
             await getAllPosts()
-            toastr["success"]('comment updated successfully')
+            toast.success('comment updated successfully')
             setComment('')
 
         } catch (e) {
             console.log(e);
-            toastr["error"](e.response.data.message)
+            toast.error(e.response.data.message)
 
         } finally {
             setWorkAsUpdate(false)

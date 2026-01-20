@@ -1,30 +1,12 @@
 import React, { useContext, useState } from 'react'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { UserInfoContext } from '../Context/UserInfoContext';
-import toastr from "toastr";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/react";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { deletePostApi, updatePostApi } from '../ApiRequests/ApiRequests';
+import toast from 'react-hot-toast';
 
-
-// toastr
-toastr.options = {
-    closeButton: false,
-    debug: true,
-    newestOnTop: true,
-    progressBar: true,
-    positionClass: "toast-bottom-right",
-    preventDuplicates: true,
-    showDuration: "300",
-    hideDuration: "1000",
-    timeOut: "5000",
-    extendedTimeOut: "1000",
-    showEasing: "swing",
-    hideEasing: "linear",
-    showMethod: "fadeIn",
-    hideMethod: "fadeOut"
-};
 
 export default function PostCardHeader({ post, alternativeUserImage, commentDate, getAllPosts, commentHeader, comment }) {
 
@@ -51,13 +33,12 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
         setIsUpdating(true)
         try {
             const response = await deletePostApi(id);
-            console.log(response);
             if (response.message.includes('success')) {
                 await getAllPosts()
-                toastr.success('Post deleted successfully');
+                toast.success('Post deleted successfully');
             }
             else {
-                toastr.error('faild to delete post ' + response.response.data.error);
+                toast.error('faild to delete post ' + response.response.data.error);
             }
         } catch (e) {
             console.log(e);
@@ -82,13 +63,13 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
             const response = await updatePostApi(formData, post._id)
             if (response.message.includes('success')) {
                 await getAllPosts()
-                toastr.success('Post updated successfully');
+                toast.success('Post updated successfully');
                 setUpdatedPostBody('')
                 setUpdatedPostImageUrl(null)
                 setUpdatedPostImage(null)
             }
             else {
-                toastr.error('faild to update post ' + response.response.data.error);
+                toast.error('faild to update post ' + response.response.data.error);
             }
         }
         setIsUpdating(false)

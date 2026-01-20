@@ -14,10 +14,10 @@ export default function PostCard({ posts, getAllPosts }) {
 
 
     return <>
-        {posts.length > 0 ?
+        {posts?.length > 0 ?
             <div className='w-full min-w-[280px] max-w-[750px] mx-auto mt-7 flex flex-col gap-5'>
                 {posts.map(post =>
-                    <div key={post._id} className='shadow-md rounded-md overflow-hidden bg-gray-500/10'>
+                    <div key={post?._id} className='shadow-md rounded-md overflow-hidden bg-gray-500/10'>
 
                         {/* post header */}
                         <PostCardHeader getAllPosts={getAllPosts} post={post} alternativeUserImage={alternativeUserImage} date={false} commentDate={''} comment={null} />

@@ -2,7 +2,7 @@ import axios from "axios"
 
 export const sendRegisterDataApi = async (userData) => {
   try {
-    const { data } = await axios.post('https://linked-posts.routemisr.com/users/signup', userData)
+    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/signup`, userData)
     return data;
   } catch (e) {
     return e.response?.data;
@@ -11,7 +11,7 @@ export const sendRegisterDataApi = async (userData) => {
 
 export const sendLoginDataApi = async (userData) => {
   try {
-    const { data } = await axios.post(`https://linked-posts.routemisr.com/users/signin`, userData)
+    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/signin`, userData)
     return data
   }
   catch (e) {
@@ -31,7 +31,7 @@ export const getPostsApi = async (link) => {
 
 export const createCommentApi = async (bodyData) => {
   try {
-    const { data } = await axios.post(`https://linked-posts.routemisr.com/comments`, bodyData, { headers: { 'token': localStorage.getItem('socialAppToken') } })
+    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/comments`, bodyData, { headers: { 'token': localStorage.getItem('socialAppToken') } })
     return data;
 
   } catch (e) {
@@ -41,7 +41,7 @@ export const createCommentApi = async (bodyData) => {
 
 export const createPostApi = async (bodyData) => {
   try {
-    const { data } = await axios.post('https://linked-posts.routemisr.com/posts', bodyData, {
+    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/posts`, bodyData, {
       headers: {
         'token': localStorage.getItem('socialAppToken')
       }
@@ -55,7 +55,7 @@ export const createPostApi = async (bodyData) => {
 
 export const getUserInfoApi = async () => {
   try {
-    const { data } = await axios.get('https://linked-posts.routemisr.com/users/profile-data', {
+    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, {
       headers: {
         'token': localStorage.getItem('socialAppToken')
       }
@@ -71,7 +71,7 @@ export const getUserInfoApi = async () => {
 // update post
 export const updatePostApi = async (bodyData, postId) => {
   try {
-    const { data } = await axios.put(`https://linked-posts.routemisr.com/posts/${postId}`, bodyData,
+    const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}`, bodyData,
       {
         headers: { 'token': localStorage.getItem('socialAppToken') }
       })
@@ -85,7 +85,7 @@ export const updatePostApi = async (bodyData, postId) => {
 // delete post
 export const deletePostApi = async (id) => {
   try {
-    const { data } = await axios.delete(`https://linked-posts.routemisr.com/posts/${id}`, {
+    const { data } = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/posts/${id}`, {
       headers: {
         'token': localStorage.getItem('socialAppToken')
       }

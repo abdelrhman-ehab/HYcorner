@@ -10,6 +10,7 @@ import Notfound from './Pages/Notfound';
 import ProtectedRoute from './Components/ProtectedRoute';
 import AuthProtectedRoute from './Components/AuthProtectedRoute';
 
+
 export default function App() {
 
   const routers = createBrowserRouter([

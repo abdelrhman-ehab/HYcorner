@@ -8,7 +8,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 const schema = zod.object({
   // name validation
-  name: zod.string().nonempty('name is requred').max(10, 'name must be at max 10 characters').min(3, 'name must be at least 3 characters'),
+  name: zod.string().nonempty('name is requred').max(20, 'name must be at max 10 characters').min(3, 'name must be at least 3 characters'),
   // email validation
   email: zod.string().nonempty('email is requred').regex(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, 'email is invalid'),
   // password validation
@@ -114,7 +114,6 @@ export default function Register() {
 
         <Select
           isInvalid={Boolean(errors.gender)}
-          defaultSelectedKeys={["male"]}
           labelPlacement="outside"
           label="Gender"
           errorMessage={errors.gender?.message}
