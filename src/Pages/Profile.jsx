@@ -11,31 +11,29 @@ import alternativeUserImage from '../assets/userCoverNotFound.png'
 import { Card, Skeleton } from "@heroui/react";
 import { Link } from 'react-router-dom';
 import { FaUserEdit } from "react-icons/fa";
+import { useQuery } from '@tanstack/react-query';
+import { getUserInfoApi, getUserPostsApi } from '../ApiRequests/ApiRequests';
 
 export default function Profile() {
   const [toggleLike, setToggleLike] = useState("")
-  const [numberOfPosts, setNumberOfPosts] = useState(0)
-  const [userData, setUserData] = useState(null)
-  const [userPosts, setUserPosts] = useState(null)
-  const getUserData = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-    setUserData(data.user)
-  }
-  const getUserPosts = async () => {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userData?._id}/posts`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-    setUserPosts(data.posts)
-    setNumberOfPosts(data.posts.length)
-  }
 
-  useEffect(() => {
-    getUserData()
-  }, [])
+  // get user data
+  const { data: userData, isLoading: userDataLoading, error: userDataError } = useQuery({
+    queryKey: ['userData'],
+    queryFn: getUserInfoApi,
+    select: (data) => data?.data.user
+  })
 
-  useEffect(() => {
-    if (userData?._id) {
-      getUserPosts()
-    }
-  }, [userData])
+
+  // get user posts
+  const { data: userPosts, isLoading: userPostsLoading, error: userPostsError, refetch } = useQuery({
+    queryKey: ['userPosts', userData?._id],
+    queryFn: () => getUserPostsApi(userData?._id),
+    select: (data) => data?.data.posts
+  })
+
+  console.log(userPosts);
+  
 
 
   const formatedDate = new Date(userData?.dateOfBirth)
@@ -60,7 +58,7 @@ export default function Profile() {
               <p>E-Mail: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
               <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'>{createdAt}</span></p>
               <p>Date Of Birth: <span className='dark:text-white/50 space-x-2 font-normal'>{dateOfBirth}</span></p>
-              <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{numberOfPosts}</span></p>
+              {/* <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{numberOfPosts}</span></p> */}
               <Button className='bg-blue-800 w-full text-md font-medium mt-1' size='md' variant='solid'>Edit Profile <FaUserEdit className='text-white' /></Button>
             </div>
           </div>
@@ -92,12 +90,12 @@ export default function Profile() {
       </div>
       {/* user posts */}
       {userPosts ?
-        <div className={`w-full min-w-[280px] max-w-[750px] mx-auto rounded-lg bg-gray-500/10 mt-7 flex flex-col gap-5 ${userPosts.length > 0 ? 'p-2' : 'p-0'} `}>
+        <div className={`w-full min-w-[280px] max-w-[750px] mx-auto rounded-lg mt-7 flex flex-col gap-5 ${userPosts.length > 0 ? 'p-2' : 'p-0'} `}>
           {[...userPosts].reverse().map(post =>
-            <div key={post._id} className='shadow-md rounded-md overflow-hidden'>
+            <div key={post._id} className='shadow-md rounded-md overflow-hidden bg-gray-500/10'>
 
               {/* post header */}
-              <PostCardHeader getAllPosts={getUserPosts} post={post} alternativeUserImage={alternativeUserImage} date={false} commentDate={''} comment={null} />
+              <PostCardHeader getAllPosts={refetch} post={post} alternativeUserImage={alternativeUserImage} date={false} commentDate={''} comment={null} />
 
               {/* post body */}
               <PostCardBody post={post} alternativePostCover={alternativePostCover} />
@@ -109,7 +107,7 @@ export default function Profile() {
               <PostCardInteractions post={post} toggleLike={toggleLike} setToggleLike={setToggleLike} />
 
               {/* postcard comments */}
-              <PostCardComments post={post} alternativeUserImage={alternativeUserImage} commentsLimit={1} getAllPosts={getUserPosts} />
+              <PostCardComments post={post} alternativeUserImage={alternativeUserImage} commentsLimit={1} getAllPosts={refetch} />
 
             </div>
           )}

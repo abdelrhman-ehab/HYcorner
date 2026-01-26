@@ -114,7 +114,7 @@ export default function PostCardComments({ post, alternativeUserImage, commentsL
                 <div className='border-b border-b-divider py-3 pe-2' key={comment._id}>
                     <div className='flex justify-between items-center'>
                         <PostCardHeader post={post} alternativeUserImage={alternativeUserImage} comment={comment} commentDate={comment?.createdAt} getAllPosts={getAllPosts} commentHeader={comment} />
-                        {userInfo._id === comment?.commentCreator?._id &&
+                        {userInfo?._id === comment?.commentCreator?._id &&
                             <Dropdown>
                                 <DropdownTrigger>
                                     <Button variant="flat" disabled={commentModefication}>

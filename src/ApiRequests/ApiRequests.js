@@ -20,13 +20,8 @@ export const sendLoginDataApi = async (userData) => {
   }
 }
 
-export const getPostsApi = async (link) => {
-  try {
-    const { data } = await axios.get(`${link}`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-    return data
-  } catch (e) {
-    console.log(e);
-  }
+export const getPostsApi = () => {
+  return axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts?limit=50&sort=-createdAt`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
 }
 
 export const createCommentApi = async (bodyData) => {
@@ -53,19 +48,17 @@ export const createPostApi = async (bodyData) => {
   }
 }
 
-export const getUserInfoApi = async () => {
-  try {
-    const { data } = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, {
+export const getUserInfoApi = () => {
+    return axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, {
       headers: {
         'token': localStorage.getItem('socialAppToken')
       }
     })
-    return data;
-
-  } catch (e) {
-    console.log(e);
-  }
 }
+
+export const getUserPostsApi = (userId) => {
+    return axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}/posts`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
+  }
 
 
 // update post

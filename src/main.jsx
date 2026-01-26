@@ -5,7 +5,11 @@ import App from './App.jsx'
 import { HeroUIProvider } from '@heroui/react'
 import AuthContextProvider from './Context/AuthContextProvider.jsx'
 import UserInfoContextProvider from './Context/UserInfoContextProvider.jsx'
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
+const queryClient = new QueryClient()
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,7 +17,10 @@ createRoot(document.getElementById('root')).render(
       <AuthContextProvider>
         <UserInfoContextProvider>
           <Toaster position="top-center" reverseOrder={false} />
-          <App />
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryDevtools/>
+            <App />
+          </QueryClientProvider>
         </UserInfoContextProvider>
       </AuthContextProvider>
     </HeroUIProvider>

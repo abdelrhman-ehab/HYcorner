@@ -5,13 +5,11 @@ import { FaImage } from "react-icons/fa";
 import { Button } from '@heroui/react';
 import { FaRegCircleXmark } from "react-icons/fa6";
 import toast from 'react-hot-toast';
+import { useQuery } from '@tanstack/react-query'
 
 
 
 export default function HomeFeed() {
-
-  const [isLoading, setIsLoading] = useState(false)
-  const [posts, setPosts] = useState([])
 
   const [postBody, setPostBody] = useState('')
   const [postImage, setPostImage] = useState(null)
@@ -21,7 +19,6 @@ export default function HomeFeed() {
 
   // create post function
   const createPost = async (e) => {
-    setIsLoading(true)
     e.preventDefault()
     if (!postBody && !postImage) {
       return
@@ -38,13 +35,12 @@ export default function HomeFeed() {
       const response = await createPostApi(formData)
       if (response.message) {
 
-        await getAllPosts()
+        await refetch()
 
         // reset inputs
         setPostBody('')
         setPostImage(null)
         setPostImageUrl(null)
-        setIsLoading(false)
 
         toast.success("post added success")
       }
@@ -64,16 +60,14 @@ export default function HomeFeed() {
 
 
   // get all posts function
-  const getAllPosts = async () => {
-    const response = await getPostsApi(`${import.meta.env.VITE_API_BASE_URL}/posts?limit=50&sort=-createdAt`)
-    setPosts(response.posts)
-  }
+  const { data: posts, isFetching, isLoading, isError, error, refetch } = useQuery({
+    queryKey: ['getAllPosts'],
+    queryFn: getPostsApi,
+    select: (data) => data.data.posts,
+    // refetchInterval:3000,
+    retry: 2,
+  })
 
-  useEffect(() => {
-    getAllPosts()
-    const interval = setInterval(getAllPosts, 120000)
-    return () => clearInterval(interval)
-  }, [])
 
 
 
@@ -96,12 +90,13 @@ export default function HomeFeed() {
               <FaImage className='text-xl cursor-pointer' />
               <input onChange={generateImageUrl} type="file" className='hidden' />
             </label>
-            <Button isLoading={isLoading} disabled={isLoading || postBody?.length < 2} type='submit' className='bg-gray-50 text-black font-medium'>{isLoading? null : 'Post'}</Button>
+            <Button disabled={isLoading || postBody?.length < 2} type='submit' className='bg-gray-50 text-black font-medium'>Post</Button>
           </div>
         </div>
       </form>
 
-      <PostCard posts={posts} getAllPosts={getAllPosts} />
+      {error?.message ? <p className='text-center mt-60 text-red-700 text-2xl'>{"" + error?.message}</p> :
+        <PostCard posts={posts} getAllPosts={refetch} />}
     </section>
 
   </>
