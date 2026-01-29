@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { Button } from "@heroui/button";
 import React, { useEffect, useState } from 'react'
 import PostCardHeader from '../Components/PostCardHeader'
@@ -12,29 +11,21 @@ import { Card, Skeleton } from "@heroui/react";
 import { Link } from 'react-router-dom';
 import { FaUserEdit } from "react-icons/fa";
 import { useQuery } from '@tanstack/react-query';
-import { getUserInfoApi, getUserPostsApi } from '../ApiRequests/ApiRequests';
+import { getUserPostsApi } from '../ApiRequests/ApiRequests';
+import { useUserInfo } from "../Hooks/useUserInfo";
 
 export default function Profile() {
   const [toggleLike, setToggleLike] = useState("")
 
   // get user data
-  const { data: userData, isLoading: userDataLoading, error: userDataError } = useQuery({
-    queryKey: ['userData'],
-    queryFn: getUserInfoApi,
-    select: (data) => data?.data.user
-  })
-
-
+  const {data: userData} = useUserInfo()
+    
   // get user posts
   const { data: userPosts, isLoading: userPostsLoading, error: userPostsError, refetch } = useQuery({
     queryKey: ['userPosts', userData?._id],
     queryFn: () => getUserPostsApi(userData?._id),
     select: (data) => data?.data.posts
   })
-
-  console.log(userPosts);
-  
-
 
   const formatedDate = new Date(userData?.dateOfBirth)
   const dateOfBirth = formatedDate.toLocaleDateString()
@@ -58,7 +49,7 @@ export default function Profile() {
               <p>E-Mail: <Link to={`https://mail.google.com/mail/?view=cm&fs=1&to=${userData?.email}`} className='dark:text-blue-700 font-normal'>{userData?.email}</Link></p>
               <p>Profile createdAt: <span className='dark:text-white/50 space-x-2 font-normal'>{createdAt}</span></p>
               <p>Date Of Birth: <span className='dark:text-white/50 space-x-2 font-normal'>{dateOfBirth}</span></p>
-              {/* <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{numberOfPosts}</span></p> */}
+              <p>Posts: <span className='dark:text-white/50 space-x-2 font-normal'>{userPosts?.length}</span></p>
               <Button className='bg-blue-800 w-full text-md font-medium mt-1' size='md' variant='solid'>Edit Profile <FaUserEdit className='text-white' /></Button>
             </div>
           </div>

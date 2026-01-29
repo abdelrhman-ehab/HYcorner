@@ -1,11 +1,13 @@
 import React, { useContext, useState } from 'react'
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { UserInfoContext } from '../Context/UserInfoContext';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@heroui/react";
 import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure } from "@heroui/react";
 import { FaRegCircleXmark } from "react-icons/fa6";
 import { deletePostApi, updatePostApi } from '../ApiRequests/ApiRequests';
 import toast from 'react-hot-toast';
+import { useUserInfo } from '../Hooks/useUserInfo';
+import { useMutation } from '@tanstack/react-query';
+import { queryClient } from './../lib/queryClient';
 
 
 export default function PostCardHeader({ post, alternativeUserImage, commentDate, getAllPosts, commentHeader, comment }) {
@@ -23,57 +25,55 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
     const d = formate.toLocaleDateString();
     const t = formate.toLocaleTimeString();
 
-    const { userInfo } = useContext(UserInfoContext);
+    const { data: userInfo } = useUserInfo();
+
     const [updatedPostBody, setUpdatedPostBody] = useState('')
     const [updatedPostImage, setUpdatedPostImage] = useState(null)
     const [updatedPostImageUrl, setUpdatedPostImageUrl] = useState(null)
     const [isUpdating, setIsUpdating] = useState(false)
 
-    const deletePost = async (id) => {
-        setIsUpdating(true)
-        try {
-            const response = await deletePostApi(id);
-            if (response.message.includes('success')) {
-                await getAllPosts()
-                toast.success('Post deleted successfully');
-            }
-            else {
-                toast.error('faild to delete post ' + response.response.data.error);
-            }
-        } catch (e) {
-            console.log(e);
-        } finally {
-            setIsUpdating(false)
+    // delete post
+    const { mutate: deletePost } = useMutation({
+        mutationKey: ['delete-post'],
+        mutationFn: (postId) => deletePostApi(postId),
+        onSuccess: async () => {
+            await queryClient.invalidateQueries('get-all-posts')
+            toast.success('Post deleted successfully')
+        },
+        onError: (err) => {
+            toast.error(err.message || 'faild to delete post ')
         }
-    }
+    })
 
 
-    const updatePost = async (e) => {
-        setIsUpdating(true)
-        e.preventDefault()
-        const formData = new FormData();
-        if (updatedPostBody.length > 1) {
-            formData.append('body', updatedPostBody)
-        }
-        if (updatedPostImage) {
-            formData.append('image', updatedPostImage)
-        }
+    // update post
+    const { mutate: updatePost } = useMutation({
+        mutationKey: ['update-post'],
+        mutationFn: ({ postId, updatedPostBody, updatedPostImage }) => {
 
-        if (updatedPostBody.length > 1 || updatedPostImage) {
-            const response = await updatePostApi(formData, post._id)
-            if (response.message.includes('success')) {
-                await getAllPosts()
-                toast.success('Post updated successfully');
-                setUpdatedPostBody('')
-                setUpdatedPostImageUrl(null)
-                setUpdatedPostImage(null)
+            const formData = new FormData()
+            if (updatedPostBody.length > 1) {
+
+                formData.append('body', updatedPostBody)
             }
-            else {
-                toast.error('faild to update post ' + response.response.data.error);
+            if (updatedPostImage) {
+                formData.append('image', updatedPostImage)
             }
+            if (updatedPostBody.length > 1 || updatedPostImage) {
+                return updatePostApi(formData, postId)
+            }
+        },
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries('get-all-posts')
+            toast.success('Post updated successfully');
+            setUpdatedPostBody('')
+            setUpdatedPostImageUrl(null)
+            setUpdatedPostImage(null)
+        },
+        onError: (err) => {
+            toast.error(err.message || 'Failed to update post');
         }
-        setIsUpdating(false)
-    }
+    })
 
     const generateImageUrl = (e) => {
         setUpdatedPostImageUrl(URL.createObjectURL(e.target.files[0]))
@@ -124,9 +124,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
 
                         <DropdownMenu aria-label="Post Actions">
                             <DropdownItem onPress={onOpen}>Update Post</DropdownItem>
-                            <DropdownItem className="text-danger" onClick={() => deletePost(post._id)}>
-                                Delete Post
-                            </DropdownItem>
+                            <DropdownItem className="text-danger" onClick={() => deletePost(post._id)}>Delete Post</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 )}
@@ -140,7 +138,7 @@ export default function PostCardHeader({ post, alternativeUserImage, commentDate
                     {(onClose) => (
                         <>
                             <ModalHeader className="flex flex-col gap-1">update post</ModalHeader>
-                            <form onSubmit={updatePost}>
+                            <form onSubmit={(e) => { e.preventDefault(); updatePost({ postId: post?._id, updatedPostBody, updatedPostImage }) }}>
                                 <ModalBody>
                                     {/* post body */}
                                     <div className='relative'>

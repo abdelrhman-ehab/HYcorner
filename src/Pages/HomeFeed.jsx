@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { createPostApi, getPostsApi } from '../ApiRequests/ApiRequests';
 import PostCard from '../Components/PostCard';
 import { FaImage } from "react-icons/fa";
@@ -6,6 +6,8 @@ import { Button } from '@heroui/react';
 import { FaRegCircleXmark } from "react-icons/fa6";
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
+import { queryClient } from './../lib/queryClient';
 
 
 
@@ -15,15 +17,10 @@ export default function HomeFeed() {
   const [postImage, setPostImage] = useState(null)
   const [postImageUrl, setPostImageUrl] = useState(null)
 
-
-
   // create post function
-  const createPost = async (e) => {
-    e.preventDefault()
-    if (!postBody && !postImage) {
-      return
-    }
-    else {
+  const { mutate: createPost, isPending: createPostPending } = useMutation({
+    mutationKey: ['create-post'],
+    mutationFn: ({ postBody, postImage }) => {
       const formData = new FormData()
       if (postBody) {
         formData.append('body', postBody)
@@ -31,25 +28,22 @@ export default function HomeFeed() {
       if (postImage) {
         formData.append('image', postImage)
       }
-
-      const response = await createPostApi(formData)
-      if (response.message) {
-
-        await refetch()
-
-        // reset inputs
-        setPostBody('')
-        setPostImage(null)
-        setPostImageUrl(null)
-
-        toast.success("post added success")
+      if (postBody || postImage) {
+        return createPostApi(formData)
       }
-      else {
-        toast.error(response)
-      }
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(['get-all-posts'])
+      setPostBody('')
+      setPostImage(null)
+      setPostImageUrl(null)
+      toast.success("post added success")
+    },
+    onError: (err) => {
+      toast.error(err?.message || 'faild to add post')
     }
+  })
 
-  }
 
   // generate image url
   const generateImageUrl = (e) => {
@@ -60,12 +54,10 @@ export default function HomeFeed() {
 
 
   // get all posts function
-  const { data: posts, isFetching, isLoading, isError, error, refetch } = useQuery({
-    queryKey: ['getAllPosts'],
+  const { data: posts, isLoading, error } = useQuery({
+    queryKey: ['get-all-posts'],
     queryFn: getPostsApi,
     select: (data) => data.data.posts,
-    // refetchInterval:3000,
-    retry: 2,
   })
 
 
@@ -74,7 +66,7 @@ export default function HomeFeed() {
   return <>
 
     <section className='px-2 md:px-15'>
-      <form onSubmit={createPost} className=''>
+      <form onSubmit={(e) => { e.preventDefault(); createPost({ postBody, postImage }) }} className=''>
         <div className='w-full min-w-[280px] max-w-[750px] mx-auto bg-gray-500/10 p-2 rounded-lg'>
           <div className='relative'>
             <textarea value={postBody} onChange={(e) => { setPostBody(e.target.value); }} className="w-full rounded-lg mb-3 border p-2" rows={3} placeholder="what's in your mind"></textarea>
@@ -90,13 +82,13 @@ export default function HomeFeed() {
               <FaImage className='text-xl cursor-pointer' />
               <input onChange={generateImageUrl} type="file" className='hidden' />
             </label>
-            <Button disabled={isLoading || postBody?.length < 2} type='submit' className='bg-gray-50 text-black font-medium'>Post</Button>
+            <Button disabled={createPostPending || (!postBody && !postImage)} isLoading={createPostPending} type='submit' className='bg-gray-50 text-blue-900 font-medium'>{createPostPending ? null : 'Post'}</Button>
           </div>
         </div>
       </form>
 
       {error?.message ? <p className='text-center mt-60 text-red-700 text-2xl'>{"" + error?.message}</p> :
-        <PostCard posts={posts} getAllPosts={refetch} />}
+        <PostCard posts={posts} />}
     </section>
 
   </>

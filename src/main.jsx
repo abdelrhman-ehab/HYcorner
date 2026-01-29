@@ -1,28 +1,26 @@
-import { StrictMode } from 'react'
+import {StrictMode} from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
 import { HeroUIProvider } from '@heroui/react'
 import AuthContextProvider from './Context/AuthContextProvider.jsx'
-import UserInfoContextProvider from './Context/UserInfoContextProvider.jsx'
 import { Toaster } from 'react-hot-toast';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import {ReactQueryDevtools} from '@tanstack/react-query-devtools'
-const queryClient = new QueryClient()
+import { queryClient } from './lib/queryClient';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import {QueryClientProvider} from '@tanstack/react-query'
+const container = document.getElementById('root')
+const root = createRoot(container)
 
-
-createRoot(document.getElementById('root')).render(
+root.render(
   <StrictMode>
-    <HeroUIProvider>
-      <AuthContextProvider>
-        <UserInfoContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <HeroUIProvider>
+        <AuthContextProvider>
           <Toaster position="top-center" reverseOrder={false} />
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools/>
-            <App />
-          </QueryClientProvider>
-        </UserInfoContextProvider>
-      </AuthContextProvider>
-    </HeroUIProvider>
+          <App />
+          <ReactQueryDevtools />
+        </AuthContextProvider>
+      </HeroUIProvider>
+    </QueryClientProvider>
   </StrictMode>,
 )

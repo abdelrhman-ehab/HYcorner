@@ -1,90 +1,102 @@
 import axios from "axios"
 
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+})
+
+// request interceptor
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('socialAppToken')
+    if (token) {
+      config.headers.token = token
+    }
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)    
+  }
+)
+
+// response interceptor
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('socialAppToken')
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  }
+)
+
+// register
 export const sendRegisterDataApi = async (userData) => {
   try {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/signup`, userData)
+    const { data } = await api.post(`/users/signup`, userData)
     return data;
   } catch (e) {
     return e.response?.data;
   }
 }
 
+// login
 export const sendLoginDataApi = async (userData) => {
   try {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/users/signin`, userData)
+    const { data } = await api.post(`/users/signin`, userData)
     return data
   }
   catch (e) {
-    console.log(e.response?.data);
     return e.response?.data
   }
 }
 
+// get posts
 export const getPostsApi = () => {
-  return axios.get(`${import.meta.env.VITE_API_BASE_URL}/posts?limit=50&sort=-createdAt`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
+  return api.get(`/posts?limit=50&sort=-createdAt`)
 }
 
-export const createCommentApi = async (bodyData) => {
-  try {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/comments`, bodyData, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-    return data;
-
-  } catch (e) {
-    return e.response.error.message
-  }
-}
-
+// create post
 export const createPostApi = async (bodyData) => {
-  try {
-    const { data } = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/posts`, bodyData, {
-      headers: {
-        'token': localStorage.getItem('socialAppToken')
-      }
-
-    })
-    return data;
-  } catch (e) {
-    return e.response.error.message
-  }
+  return api.post(`/posts`, bodyData)
 }
-
-export const getUserInfoApi = () => {
-    return axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/profile-data`, {
-      headers: {
-        'token': localStorage.getItem('socialAppToken')
-      }
-    })
-}
-
-export const getUserPostsApi = (userId) => {
-    return axios.get(`${import.meta.env.VITE_API_BASE_URL}/users/${userId}/posts`, { headers: { 'token': localStorage.getItem('socialAppToken') } })
-  }
-
 
 // update post
-export const updatePostApi = async (bodyData, postId) => {
-  try {
-    const { data } = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/posts/${postId}`, bodyData,
-      {
-        headers: { 'token': localStorage.getItem('socialAppToken') }
-      })
-    return data
-  } catch (e) {
-    return e
-  }
+export const updatePostApi = (formData, postId) => {
+  return api.put(`/posts/${postId}`, formData)
+}
+
+// delete post
+export const deletePostApi = (id) => {
+  return api.delete(`/posts/${id}`)
 }
 
 
-// delete post
-export const deletePostApi = async (id) => {
-  try {
-    const { data } = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/posts/${id}`, {
-      headers: {
-        'token': localStorage.getItem('socialAppToken')
-      }
+// make comment
+export const makeCommentApi = (comment, postId) => {
+  return api.post(`/comments`,
+    {
+      content: comment,
+      post: postId
     })
-    return data
-  } catch (e) {
-    return e
-  }
+}
+
+// update comment
+export const updateCommentApi = (comment, postId) => {
+  return api.put(`/comments/${postId}`, { "content": comment })
+}
+
+// delete comment
+export const deleteCommentApi = (id) => {
+  return api.delete(`/comments/${id}`)
+}
+
+// user info
+export const getUserInfoApi = () => {
+  return api.get(`/users/profile-data`)
+}
+
+// user posts
+export const getUserPostsApi = (userId) => {
+  return api.get(`/users/${userId}/posts`)
 }

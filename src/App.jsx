@@ -9,22 +9,23 @@ import PostDetails from './Pages/PostDetails';
 import Notfound from './Pages/Notfound';
 import ProtectedRoute from './Components/ProtectedRoute';
 import AuthProtectedRoute from './Components/AuthProtectedRoute';
+import Test from './Components/Test';
 
+const routers = createBrowserRouter([
+  {
+    path: '', element: <Layout />, children: [
+      { index: true, element: <ProtectedRoute><HomeFeed /></ProtectedRoute> },
+      { path: '/profile', element: <ProtectedRoute><Profile /></ProtectedRoute> },
+      { path: '/postDetails/:id', element: <ProtectedRoute><PostDetails /></ProtectedRoute> },
+      { path: '/register', element: <AuthProtectedRoute><Register /></AuthProtectedRoute> },
+      { path: '/login', element: <AuthProtectedRoute><Login /></AuthProtectedRoute> },
+      { path: '/test', element: <Test><Login /></Test> },
+      { path: '*', element: <Notfound /> },
+    ]
+  },
+])
 
 export default function App() {
-
-  const routers = createBrowserRouter([
-    {
-      path: '', element: <Layout />, children: [
-        { index: true, element: <ProtectedRoute><HomeFeed /></ProtectedRoute> },
-        { path: '/profile', element: <ProtectedRoute><Profile /></ProtectedRoute> },
-        { path: '/postDetails/:id', element: <ProtectedRoute><PostDetails /></ProtectedRoute> },
-        { path: '/register', element: <AuthProtectedRoute><Register /></AuthProtectedRoute> },
-        { path: '/login', element: <AuthProtectedRoute><Login /></AuthProtectedRoute> },
-        { path: '*', element: <Notfound /> },
-      ]
-    },
-  ])
   return (
     <RouterProvider router={routers}></RouterProvider>
   )
