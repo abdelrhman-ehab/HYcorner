@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { FaUser } from "react-icons/fa";
 import { CiDark } from "react-icons/ci";
 import { CiLight } from "react-icons/ci";
@@ -23,7 +23,7 @@ export default function NavbarComponent(props) {
     <nav className='bg-gray-300 text-black dark:bg-gray-900 dark:text-gray-100 md:px-15 p-4 sticky'>
       <div className="container mx-auto">
         <div className='flex justify-between items-center'>
-          <Link className={'text-xl font-medium flex items-center gap-1.5'} to={'/test'}><img src={logo} className='w-8 object-cover' /> HYcorner</Link>
+          <Link className={'text-xl font-medium flex items-center gap-1.5'}><img src={logo} className='w-8 object-cover' /> HYcorner</Link>
           <div className='flex justify-center items-center gap-4'>
             {theme === 'light' ? <CiDark className='text-blue-900 text-2xl cursor-pointer' onClick={() => { toggleTheme() }} /> : <CiLight className='text-yellow-300 text-2xl cursor-pointer hover:animate-spin' onClick={() => { toggleTheme() }} />
             }
